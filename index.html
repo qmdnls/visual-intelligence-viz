@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Visual Intelligence Platform</title>
+  <style>
+    body {
+      font-size: 18px;
+    }
+  </style>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script>
+    $(function () {
+      var socket = io();
+      socket.on('jsonUpdate', function(jsonData) {
+        console.log(JSON.stringify(jsonData));
+        $('#question_id').text("Question ID: " + jsonData.status.question_id);
+        $('#question').text("Question: " + jsonData.status.question);
+        jsonData.status.answers.forEach(answer => $('#answers').append($('<li>').text(answer)));
+        $('#correct_idx').text("Correct answer index: " + jsonData.status.correct_idx);
+        $('#q_level_logic').text("Question logic level: " + jsonData.status.q_level_logic);
+        $('#q_level_mem').text("Question memory level: " + jsonData.status.q_level_mem);
+        $('#vid').text("Video: " + jsonData.status.vid);
+        $('#shots').text("Shots contained: " + jsonData.status.shot_contained);
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <p id="question_id"></p>
+  <p id="question"></p>
+  <ul id="answers"></ul>
+  <p id="correct_idx"></p>
+  <p id="q_level_logic"></p>
+  <p id="q_level_mem"></p>
+  <p id="vid"></p>
+  <p id="shots"></p>
+</body>
+
+</html>
