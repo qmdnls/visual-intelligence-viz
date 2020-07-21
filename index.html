@@ -17,6 +17,7 @@
         console.log(JSON.stringify(jsonData));
         $('#question_id').text("Question ID: " + jsonData.status.question_id);
         $('#question').text("Question: " + jsonData.status.question);
+        $('#answers').empty();
         jsonData.status.answers.forEach(answer => $('#answers').append($('<li>').text(answer)));
         $('#correct_idx').text("Correct answer index: " + jsonData.status.correct_idx);
         $('#q_level_logic').text("Question logic level: " + jsonData.status.q_level_logic);
