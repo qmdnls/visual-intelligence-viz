@@ -27,7 +27,7 @@ io.on('connection', (socket) => {
 });
 
 // Look for changes in the file
-fs.watch(JSON_LOCATION, function(event, fileName) {
+fs.watchFile(JSON_LOCATION, function(curr, prev) {
     jf.readFile(JSON_LOCATION, function(err, data) { // upon change re-read the json file for updated status
         jsonWatcher.emit('update', data)
     });
