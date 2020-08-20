@@ -3,10 +3,15 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var jf = require('jsonfile'); //jsonfile module
 var fs = require('fs'); //require file system
+var express = require('express')
+var dagre = require("dagre");
+
 JSON_LOCATION = 'sample.json'
 
 EventEmitter = require('events').EventEmitter;
 jsonWatcher = new EventEmitter();
+
+app.use(express.static('public'));
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');

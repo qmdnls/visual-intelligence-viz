@@ -1,6 +1,6 @@
 {
     "status": {
-        "question_id": 3707,
+        "question_id": 3710,
         "question": "What did Dokyung do in his home?",
         "answers": [
             "Dokyung texted the message to mom.",
@@ -9,7 +9,7 @@
             "Dokyung texted the message to sister.",
             "Dokyung texted the message to brother."
         ],
-        "correct_idx": 3,
+        "correct_idx": 5,
         "shot_contained": [
             48,
             115
