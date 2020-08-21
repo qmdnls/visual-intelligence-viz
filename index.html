@@ -10,7 +10,7 @@
     }
 
     /* This sets the color for "TK" nodes to a light blue green. */
-    g.person>rect {
+    g.active>rect {
       fill: #00ffd0;
     }
 
@@ -39,63 +39,12 @@
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script>
     $(function () {
-      var socket = io();
-      socket.on('jsonUpdate', function(jsonData) {
-        console.log(JSON.stringify(jsonData));
-        $('#question_id').text("Question ID: " + jsonData.status.question_id);
-        $('#question').text("Question: " + jsonData.status.question);
-        $('#answers').empty();
-        jsonData.status.answers.forEach(answer => $('#answers').append($('<li>').text(answer)));
-        $('#correct_idx').text("Correct answer index: " + jsonData.status.correct_idx);
-        $('#q_level_logic').text("Question logic level: " + jsonData.status.q_level_logic);
-        $('#q_level_mem').text("Question memory level: " + jsonData.status.q_level_mem);
-        $('#vid').text("Video: " + jsonData.status.vid);
-        $('#shots').text("Shots contained: " + jsonData.status.shot_contained);
-      });
-    });
-  </script>
-</head>
+      // Create svg canvas to draw the graph on
+      $('#svg').append('<svg width=1200 height=700></svg>');
 
-<body>
-  <p id="question_id"></p>
-  <p id="question"></p>
-  <ul id="answers"></ul>
-  <p id="correct_idx"></p>
-  <p id="q_level_logic"></p>
-  <p id="q_level_mem"></p>
-  <p id="vid"></p>
-  <p id="shots"></p>
-  <svg width=960 height=600></svg>
-  <p id="other">A sample showing how to use DOM nodes in a graph. Note that IE does not
-    support this technique.
-
-    <script id="js">
-      // Create a new directed graph 
+      // Create a new directed graph
       var g = new dagre.graphlib.Graph();
-
-      // Set an object for the graph label
-      g.setGraph({});
-
-      // Default to assigning a new object as a label for each new edge.
-      g.setDefaultEdgeLabel(function () { return {}; });
-
-      // Add nodes to the graph. The first argument is the node id. The second is
-      // metadata about the node. In this case we're going to add labels to each of
-      // our nodes.
-      g.setNode("kspacey", { label: "Kevin Spacey", width: 144, height: 100, class:"person" });
-      g.setNode("swilliams", { label: "Saul Williams", width: 160, height: 100 });
-      g.setNode("bpitt", { label: "Brad Pitt", width: 108, height: 100 });
-      g.setNode("hford", { label: "Harrison Ford", width: 168, height: 100 });
-      g.setNode("lwilson", { label: "Luke Wilson", width: 144, height: 100 });
-      g.setNode("kbacon", { label: "Kevin Bacon", width: 121, height: 100 });
-
-      // Add edges to the graph.
-      g.setEdge("kspacey", "swilliams");
-      g.setEdge("swilliams", "kbacon");
-      g.setEdge("bpitt", "kbacon");
-      g.setEdge("hford", "lwilson");
-      g.setEdge("lwilson", "kbacon");
-
+      
       // Create the renderer
       var render = new dagreD3.render();
 
@@ -103,16 +52,54 @@
       var svg = d3.select("svg"),
         svgGroup = svg.append("g");
 
-      // Run the renderer. This is what draws the final graph.
-      render(d3.select("svg g"), g);
+      var socket = io();
+      socket.on('jsonUpdate', function (jsonData) {
+        console.log(JSON.stringify(jsonData));
+        /*$('#question_id').text("Question ID: " + jsonData.status.question_id);
+        $('#question').text("Question: " + jsonData.status.question);
+        $('#answers').empty();
+        jsonData.status.answers.forEach(answer => $('#answers').append($('<li>').text(answer)));
+        $('#correct_idx').text("Correct answer index: " + jsonData.status.correct_idx);
+        $('#q_level_logic').text("Question logic level: " + jsonData.status.q_level_logic);
+        $('#q_level_mem').text("Question memory level: " + jsonData.status.q_level_mem);
+        $('#vid').text("Video: " + jsonData.status.vid);
+        $('#shots').text("Shots contained: " + jsonData.status.shot_contained);*/
 
-      // Center the graph
-      var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
-      svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
-      svg.attr("height", g.graph().height + 40);
+        // Overwrite the previous graph to redraw completely (we can't remove edges easily unfortunately) 
+        g = new dagre.graphlib.Graph();
 
-    </script>
+        // Set an object for the graph label
+        g.setGraph({});
 
+        // Default to assigning a new object as a label for each new edge.
+        g.setDefaultEdgeLabel(function () { return {}; });
+
+        // Set left-to-right orientation
+        g.graph().rankDir = 'LR';
+
+        modules = jsonData;
+        modules.forEach(generateNode);
+
+        // Run the renderer. This is what draws the final graph.
+        render(d3.select("svg g"), g);
+
+        // Center the graph
+        var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
+        svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
+        svg.attr("height", g.graph().height + 40);
+      });
+
+      function generateNode(module, index) {
+        g.setNode(`${module.id}`, { label: `${module.name}`, width: 200, height: 200, class: `${module.state}` })
+        module.next_module.forEach(next => g.setEdge(`${module.id}`, next.toString()))
+      }
+
+    });
+  </script>
+</head>
+
+<body>
+  <div id="svg"></div>
 </body>
 
 </html>
