@@ -7,13 +7,20 @@
   <style>
     body {
       font-size: 18px;
+    } 
+
+    g.dialog>rect {
+      fill: #90f592;
     }
 
-    /* This sets the color for "TK" nodes to a light blue green. */
-    g.active>rect {
-      fill: #00ffd0;
+    g.qa>rect {
+      fill: #6b5ced;
     }
-
+    
+    g.sigm>rect {
+      fill: #f58e8e;
+    }
+    
     text {
       font-weight: 300;
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -26,6 +33,11 @@
       stroke-width: 1.5px;
     }
 
+    /* This sets the border color for nodes currently running. */
+    g.active>rect {
+      stroke: #ff0000; /*#e30707*/
+      stroke-width: 5px;
+    }
     .edgePath path {
       stroke: #333;
       stroke-width: 1.5px;
@@ -40,7 +52,7 @@
   <script>
     $(function () {
       // Create svg canvas to draw the graph on
-      $('#svg').append('<svg width=1200 height=700></svg>');
+      $('#svg').append('<svg width=2000 height=2000></svg>');
 
       // Create a new directed graph
       var g = new dagre.graphlib.Graph();
@@ -83,16 +95,25 @@
         // Run the renderer. This is what draws the final graph.
         render(d3.select("svg g"), g);
 
+        g.nodes().forEach(function(v) {
+            console.log("Node " + v + ": " + JSON.stringify(g.node(v)));
+        });
+        g.edges().forEach(function(e) {
+            console.log("Edge " + e.v + " -> " + e.w + ": " + JSON.stringify(g.edge(e)));
+        });
+
         // Center the graph
+        svg.attr("width", g.graph().width + 80);
+        svg.attr("height", g.graph().height + 80);
         var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
         svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
-        svg.attr("height", g.graph().height + 40);
       });
 
       function generateNode(module, index) {
-        g.setNode(`${module.id}`, { label: `${module.name}`, width: 200, height: 200, class: `${module.state}` })
+          g.setNode(`${module.id}`, { label: `${module.name}`, width: 130, height: 70, class: `${module.state} ${module.group}` })
         module.next_module.forEach(next => g.setEdge(`${module.id}`, next.toString()))
       }
+
 
     });
   </script>

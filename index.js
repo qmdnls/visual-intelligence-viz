@@ -6,7 +6,8 @@ var fs = require('fs'); //require file system
 var express = require('express')
 var dagre = require("dagre");
 
-JSON_LOCATION = 'sample.json'
+//JSON_LOCATION = 'sample.json'
+JSON_LOCATION = 'demo.json' // enables demo
 
 EventEmitter = require('events').EventEmitter;
 jsonWatcher = new EventEmitter();
