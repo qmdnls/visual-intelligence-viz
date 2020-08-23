@@ -20,11 +20,14 @@
     g.sigm>rect {
       fill: #f58e8e;
     }
-    
-    text {
+   
+    .label {
       font-weight: 300;
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 14px;
+      font-size: 16px;
+      white-space: normal;
+      width: 120px;
+      text-align: center;
     }
 
     .node rect {
@@ -109,8 +112,8 @@
         svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
       });
 
-      function generateNode(module, index) {
-          g.setNode(`${module.id}`, { label: `${module.name}`, width: 130, height: 70, class: `${module.state} ${module.group}` })
+      function generateNode(module, index) { 
+          g.setNode(`${module.id}`, { labelType: 'html', label: `<p class="label">${module.name}</p>`, width: 120, height: 70, class: `${module.state} ${module.group}` })
         module.next_module.forEach(next => g.setEdge(`${module.id}`, next.toString()))
       }
 
