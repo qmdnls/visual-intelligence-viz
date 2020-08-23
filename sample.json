@@ -17,7 +17,8 @@
         ],
         "input": "Audio file",
         "output": "Who is holding the keys?",
-        "state": "inactive"
+        "state": "inactive",
+        "group": "dialog"
     },
     {
         "id": 2,
@@ -27,7 +28,8 @@
         ],
         "input": "Frame",
         "output": "Extracted features",
-        "state": "active"
+        "state": "active",
+        "group": "dialog"
     },
     {
         "id": 3,
@@ -37,7 +39,8 @@
         ],
         "input": [],
         "output": [],
-        "state": "active"
+        "state": "active",
+        "group": "dialog"
     },
     {
         "id": 4,
@@ -47,7 +50,8 @@
         ],
         "input": [],
         "output": [],
-        "state": "inactive"
+        "state": "inactive",
+        "group": "qa"
     },
 	{
         "id": 5,
@@ -57,7 +61,8 @@
         ],
         "input": [],
         "output": [],
-        "state": "active"
+        "state": "active",
+        "group": "qa"
     },
 	{
         "id": 6,
@@ -67,27 +72,30 @@
         ],
         "input": [],
         "output": [],
-        "state": "active"
+        "state": "active",
+        "group": "qa"
     },
 	{
         "id": 7,
-        "name": "메모리 기반 QA 모델",
+        "name": "멀티모달 스토리 QA 모델",
         "next_module": [
             3
         ],
         "input": [],
         "output": [],
-        "state": "active"
+        "state": "active",
+        "group": "qa"
     },
 	{
         "id": 8,
-        "name": "메모리 기반 QA 모델",
+        "name": "KB 기반 QA 모델",
         "next_module": [
             3
         ],
         "input": [],
         "output": [],
-        "state": "active"
+        "state": "active",
+        "group": "qa"
     },
 	{
         "id": 9,
@@ -97,7 +105,8 @@
         ],
         "input": [],
         "output": [],
-        "state": "active"
+        "state": "active",
+        "group": "sigm"
     },
 	{
         "id": 10,
@@ -107,7 +116,8 @@
         ],
         "input": [],
         "output": [],
-        "state": "active"
+        "state": "active",
+        "group": "sigm"
     },
 	{
         "id": 11,
@@ -117,7 +127,8 @@
         ],
         "input": [],
         "output": [],
-        "state": "active"
+        "state": "active",
+        "group": "sigm"
     },
 	{
         "id": 12,
@@ -127,6 +138,7 @@
         ],
         "input": [],
         "output": [],
-        "state": "active"
+        "state": "active",
+        "group": "sigm"
     }
 ]
