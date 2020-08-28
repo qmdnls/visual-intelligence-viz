@@ -46,13 +46,22 @@
     }
 
     /* This sets the border color for nodes currently running. */ /*#e30707*/
-    /*g.active>rect {
-      stroke: #ff0000; 
-      stroke-width: 5px;
-    }*/
+    g.active .card {
+      border-color: #ff0000;
+    }
+
+    .card {
+      border-width: 2px;
+    }
+
     .edgePath path {
       stroke: #333;
-      stroke-width: 1.5px;
+      stroke-width: 1.6px;
+    }
+
+    .edgePath.active path {
+      stroke: #ff0000;
+      fill: #ff0000;
     }
   </style>
 
@@ -122,9 +131,16 @@
       });
 
       function generateNode(module, index) { 
-        var nodeLabel = `<div class="card text-white" style="width: 200px;"><h5 class="card-header text-wrap module-name">${module.name}</h5><ul class="list-group list-group-flush text-dark text-wrap"><li class="list-group-item">Input: ${module.input}</li><li class="list-group-item">Output: ${module.output}</li></ul>` 
+        var nodeLabel = `
+            <div class="card text-white" style="width: 200px;">
+              <h5 class="card-header text-wrap module-name">${module.name}</h5>
+              <ul class="list-group list-group-flush text-dark text-wrap">
+                <li class="list-group-item">Input: ${module.input}</li>
+                <li class="list-group-item">Output: ${module.output}</li>
+              </ul>
+            </div>`
         g.setNode(`${module.id}`, { labelType: 'html', label: nodeLabel, padding: 0, class: `${module.state} ${module.group}` })
-        module.next_module.forEach(next => g.setEdge(`${module.id}`, next.toString(), { curve: d3.curveBasis }))
+        module.next_module.forEach(next => g.setEdge(`${module.id}`, next.toString(), { curve: d3.curveBasis, class: `${module.state}`}))
       }
 
 

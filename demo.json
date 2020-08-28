@@ -33,7 +33,7 @@
         ],
         "input": "Frame",
         "output": "Extracted features",
-        "state": "active",
+        "state": "inactive",
         "group": "dialog"
     },
     {
