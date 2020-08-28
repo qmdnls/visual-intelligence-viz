@@ -122,7 +122,7 @@
       });
 
       function generateNode(module, index) { 
-        var nodeLabel = `<div class="card text-white" style="width: 200px;"><h5 class="card-header text-wrap module-name">${module.name}</h5><div class="card-body module-desc"><p class="card-text">Some text</p></div>` 
+        var nodeLabel = `<div class="card text-white" style="width: 200px;"><h5 class="card-header text-wrap module-name">${module.name}</h5><ul class="list-group list-group-flush text-dark text-wrap"><li class="list-group-item">Input: ${module.input}</li><li class="list-group-item">Output: ${module.output}</li></ul>` 
         g.setNode(`${module.id}`, { labelType: 'html', label: nodeLabel, padding: 0, class: `${module.state} ${module.group}` })
         module.next_module.forEach(next => g.setEdge(`${module.id}`, next.toString(), { curve: d3.curveBasis }))
       }
