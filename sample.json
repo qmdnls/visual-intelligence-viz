@@ -7,7 +7,8 @@
         ],
         "input": "",
         "output": "",
-        "state": "inactive"
+        "state": "inactive",
+        "group": "env"
     },
     {
         "id": 1,

@@ -7,7 +7,8 @@
         ],
         "input": "",
         "output": "",
-        "state": "inactive"
+        "state": "inactive",
+        "group": "env"
     },
     {
         "id": 1,
@@ -32,7 +33,7 @@
         ],
         "input": "Frame",
         "output": "Extracted features",
-        "state": "inactive",
+        "state": "active",
         "group": "dialog"
     },
     {

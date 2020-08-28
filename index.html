@@ -4,43 +4,52 @@
 <head>
   <title>Visual Intelligence Platform</title>
 
+  <link rel="stylesheet" href="css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
   <style>
     body {
       font-size: 18px;
     } 
 
-    g.dialog>rect {
-      fill: #90f592;
+    .node rect {
+      stroke: none;
+      fill: none;
     }
 
-    g.qa>rect {
-      fill: #6b5ced;
+    .env .card {
+      background-color: #bfb6b6;
     }
     
-    g.sigm>rect {
-      fill: #f58e8e;
+    .qa .card {
+      background-color: #6b5ced;
     }
 
-    .label {
-      font-weight: 300;
+    .dialog .card {
+      background-color: #90f592;
+
+    }
+    
+    .sigm .card {
+      background-color: #f58e8e;
+    }
+
+    .module-name {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 16px;
-      white-space: normal;
-      width: 120px;
+      font-size: 18px;
       text-align: center;
     }
 
-    .node rect {
-      stroke: #999;
-      fill: #fff;
-      stroke-width: 1.5px;
+    .module-desc {
+      font-weight: 300;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      text-align: left;
     }
 
-    /* This sets the border color for nodes currently running. */
-    g.active>rect {
-      stroke: #ff0000; /*#e30707*/
+    /* This sets the border color for nodes currently running. */ /*#e30707*/
+    /*g.active>rect {
+      stroke: #ff0000; 
       stroke-width: 5px;
-    }
+    }*/
     .edgePath path {
       stroke: #333;
       stroke-width: 1.5px;
@@ -113,8 +122,9 @@
       });
 
       function generateNode(module, index) { 
-          g.setNode(`${module.id}`, { labelType: 'html', label: `<p class="label">${module.name}</p>`, width: 120, height: 70, class: `${module.state} ${module.group}` })
-        module.next_module.forEach(next => g.setEdge(`${module.id}`, next.toString()))
+        var nodeLabel = `<div class="card text-white" style="width: 200px;"><h5 class="card-header text-wrap module-name">${module.name}</h5><div class="card-body module-desc"><p class="card-text">Some text</p></div>` 
+        g.setNode(`${module.id}`, { labelType: 'html', label: nodeLabel, padding: 0, class: `${module.state} ${module.group}` })
+        module.next_module.forEach(next => g.setEdge(`${module.id}`, next.toString(), { curve: d3.curveBasis }))
       }
 
 
