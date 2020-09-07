@@ -39,4 +39,27 @@ And that's it, the server is now listening on port 3000!
 
 # Usage
 
-The server is listening to changes in the `demo.json` file.
+The server is listening to changes in the `demo.json` file. If there is any change to the file (e.g. the file is overwritten by a Python script outputting the new module states) the server will reload the file and send updates to all clients via web sockets. The data flow graph is then redrawn client-side and changes are reflected in real-time. The currently active module is highlighted.
+
+# Format of the .json file
+
+The `demo.json` file represents the state of the modules at any given time. Essentially, the file is a list of all the modules that will be drawn in the graph and contains some basic information about each module:
+
+```
+[
+    {
+        "id": 0,
+        "name": "입력/출력",
+        "next_module": [
+            1
+        ],
+        "input": "",
+        "output": "",
+        "state": "inactive",
+        "group": "env"
+    },
+    ...
+]
+```
+
+The `id` field is a unique ID for each module. The name will be shown as the name of the module in the data flow graph. The `next_module` attribute is a list of module IDs of modules that are children in the graph, i.e. we list the IDs of all the modules to which this module will output its data. The `input` and `output` attribute take a textual representation of the data and output it as part of the module in the data flow graph. The `state` attribute should either be set to `active` or to `inactive` and represents whether the module is currently running or not. The `group` attribute determines a "grouping" for each module; while not strictly necessary we use four groups (`env`, `dialog`, `qa` and `sigm`) and assign each of them a different style (color) to highlight which modules belong together.
