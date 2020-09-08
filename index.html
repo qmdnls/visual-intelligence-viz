@@ -19,7 +19,12 @@
     .env .card {
       background-color: #bfb6b6;
     }
-    
+
+    /* Fixes positioning in Safari */
+    .card, .list-group, .list-group-item  {
+        position: static;
+    }
+
     .qa .card {
       background-color: #6b5ced;
     }
