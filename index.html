@@ -132,35 +132,17 @@
                 // Display the question and video to page in separate cards and update them only if they have changed
                 if (modules[0]["question"] !== question) {
                     question = modules[0]["question"]
-                    document.getElementById("question").innerHTML = `
-                        <div class="card h-100">
-                            <h5 class="card-header">Question:</h5>
-                            <div class="card-body d-flex text-wrap"><p class="w-100 align-self-center text-center">${question}</p></div>
-                        </div>`
+                    document.getElementById("question").innerHTML = `${question}`
                 }
                 
                 if (modules[0]["video"] !== video) {
                     video = modules[0]["video"]
                     document.getElementById("video").innerHTML = `
-                        <div class="card h-100">
-                            <h5 class="card-header">Input video:</h5>
-                            <div class="card-body text-center text-wrap">
-                                <video width="320" height="240" controls autoplay muted>
-                                    <source src="media/${video}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
-                        </div>`
+                            <video width="320" height="240" controls autoplay muted>
+                                <source src="media/${video}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>`
                 }
-
-                /*
-                g.nodes().forEach(function (v) {
-                    console.log("Node " + v + ": " + JSON.stringify(g.node(v)));
-                });
-                g.edges().forEach(function (e) {
-                    console.log("Edge " + e.v + " -> " + e.w + ": " + JSON.stringify(g.edge(e)));
-                });
-                */
 
                 // Set the svg height so page size remains constant even when we change the svg viewBox
                 $(".graph").height(height)
@@ -171,12 +153,6 @@
                 // Run the renderer. This is what draws the final graph.
                 render(d3.select("svg g"), g);
                 
-                // Center the graph
-                //svg.attr("width", g.graph().width + 80);
-                //svg.attr("height", g.graph().height + 80);
-                //var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
-                //svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
-
                 width = g.graph().width + 40
                 height = g.graph().height + 40
                 svg.attr("preserveAspectRatio", "xMinYMin meet")
@@ -216,10 +192,23 @@
     <div class="container-fluid pt-4 px-4">
         <div class="row">
             <div class="col-md">
-                <div id="question" class="question-card h-100"></div>
+                <div class="question-card h-100">
+                    <div class="card h-100">
+                        <h5 class="card-header">Question:</h5>
+                        <div class="card-body d-flex text-wrap">
+                            <p class="w-100 align-self-center text-center" id="question"></p>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-md">
-                <div id="video" class="video-card h-100"></div>
+                <div class="video-card h-100">
+                    <div class="card h-100">
+                        <h5 class="card-header">Input video:</h5>
+                        <div class="card-body text-center text-wrap" id="video">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="graph">
