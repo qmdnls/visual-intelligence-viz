@@ -103,9 +103,11 @@
             // Set up socket
             var socket = io();
             
-            // Store the current question and video
+            // Store the current question and video, graph dimensions
             var question;
             var video;
+            var width;
+            var height;
 
             socket.on('jsonUpdate', function (jsonData) {
                 console.log(JSON.stringify(jsonData));
@@ -123,10 +125,11 @@
                     g.graph().rankDir = 'LR';
                 };
 
+                // Generate the nodes and edges
                 modules = jsonData;
                 modules.forEach(generateNode);
 
-                // Write the question and video to page in separate cards
+                // Display the question and video to page in separate cards and update them only if they have changed
                 if (modules[0]["question"] !== question) {
                     question = modules[0]["question"]
                     document.getElementById("question").innerHTML = `
@@ -135,6 +138,7 @@
                             <div class="card-body d-flex text-wrap"><p class="w-100 align-self-center text-center">${question}</p></div>
                         </div>`
                 }
+                
                 if (modules[0]["video"] !== video) {
                     video = modules[0]["video"]
                     document.getElementById("video").innerHTML = `
@@ -149,27 +153,37 @@
                         </div>`
                 }
 
+                /*
                 g.nodes().forEach(function (v) {
                     console.log("Node " + v + ": " + JSON.stringify(g.node(v)));
                 });
                 g.edges().forEach(function (e) {
                     console.log("Edge " + e.v + " -> " + e.w + ": " + JSON.stringify(g.edge(e)));
                 });
-                
+                */
+
+                // Set the svg height so page size remains constant even when we change the svg viewBox
+                $(".graph").height(height)
+
                 // Clear the previous viewBox so that sizes will be drawn correctly
                 svg.attr("viewBox", null);
                 
                 // Run the renderer. This is what draws the final graph.
                 render(d3.select("svg g"), g);
-
+                
                 // Center the graph
                 //svg.attr("width", g.graph().width + 80);
                 //svg.attr("height", g.graph().height + 80);
                 //var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
                 //svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
 
+                width = g.graph().width + 40
+                height = g.graph().height + 40
                 svg.attr("preserveAspectRatio", "xMinYMin meet")
-                svg.attr("viewBox", "0 0 " + (g.graph().width + 40) + " " + (g.graph().height + 40));
+                svg.attr("viewBox", "0 0 " + width + " " + height);
+                
+                // Remove the svg height again
+                $(".graph").height("auto")
             });
 
             function generateNode(module, index) {
@@ -208,7 +222,9 @@
                 <div id="video" class="video-card h-100"></div>
             </div>
         </div>
-        <div id="svg" class="pt-3"></div>
+        <div class="graph">
+            <div id="svg" class="pt-3"></div>
+        </div>
         <footer class="mt-3">© Björn Bebensee, 2020</footer>
     </div>
 </body>
