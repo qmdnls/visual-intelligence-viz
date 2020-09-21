@@ -2,159 +2,196 @@
 <html>
 
 <head>
-  <title>Visual Intelligence Platform</title>
+    <title>Visual Intelligence Platform</title>
 
-  <link rel="stylesheet" href="css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
-  <style>
+    <style>
     body {
-      font-size: 18px;
-    } 
+            font-size: 18px;
+        }
 
-    .node rect {
-      stroke: none;
-      fill: none;
-    }
+        .node rect {
+            stroke: none;
+            fill: none;
+        }
 
-    .env .card {
-      background-color: #bfb6b6;
-    }
+        .env .card {
+            background-color: #bfb6b6;
+        }
 
-    /* Fixes positioning in Safari */
-    .card, .list-group, .list-group-item  {
-        position: static;
-    }
+        /* Fixes positioning in Safari */
+        .card,
+        .list-group,
+        .list-group-item {
+            position: static;
+        }
 
-    .qa .card {
-      background-color: #6b5ced;
-    }
+        .qa .card {
+            background-color: #6b5ced;
+        }
 
-    .dialog .card {
-      background-color: #90f592;
+        .dialog .card {
+            background-color: #90f592;
 
-    }
-    
-    .sigm .card {
-      background-color: #f58e8e;
-    }
+        }
 
-    .module-name {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 18px;
-      text-align: center;
-    }
+        .sigm .card {
+            background-color: #f58e8e;
+        }
 
-    .module-desc {
-      font-weight: 300;
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      text-align: left;
-    }
+        .module-name {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 18px;
+            text-align: center;
+        }
 
-    /* This sets the border color for nodes currently running. */ /*#e30707*/
-    g.active .card {
-      border-color: #ff0000;
-    }
+        .module-desc {
+            font-weight: 300;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            text-align: left;
+        }
 
-    .card {
-      border-width: 2px;
-    }
+        /* This sets the border color for nodes currently running. */
+        /*#e30707*/
+        g.active .card {
+            border-color: #ff0000;
+        }
 
-    .edgePath path {
-      stroke: #333;
-      stroke-width: 1.6px;
-    }
+        .card {
+            border-width: 2px;
+        }
 
-    .edgePath.active path {
-      stroke: #ff0000;
-      fill: #ff0000;
-    }
-  </style>
+        .edgePath path {
+            stroke: #333;
+            stroke-width: 1.6px;
+        }
 
-  <script src="js/d3.min.js"></script>
-  <script src="js/dagre-d3.min.js"></script>
-  <script src="js/dagre.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script>
-    $(function () {
-      // Create svg canvas to draw the graph on
-      $('#svg').append('<svg width=2000 height=2000></svg>');
+        .edgePath.active path {
+            stroke: #ff0000;
+            fill: #ff0000;
+        }
+    </style>
 
-      // Create a new directed graph
-      var g = new dagre.graphlib.Graph();
-      
-      // Create the renderer
-      var render = new dagreD3.render();
+    <script src="js/d3.min.js"></script>
+    <script src="js/dagre-d3.min.js"></script>
+    <script src="js/dagre.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+        $(function () {
+            // Create svg canvas to draw the graph on
+            $('#svg').append('<svg></svg>');
 
-      // Set up an SVG group so that we can translate the final graph.
-      var svg = d3.select("svg"),
-        svgGroup = svg.append("g");
+            // Create a new directed graph
+            var g = new dagre.graphlib.Graph();
 
-      var socket = io();
-      socket.on('jsonUpdate', function (jsonData) {
-        console.log(JSON.stringify(jsonData));
-        /*$('#question_id').text("Question ID: " + jsonData.status.question_id);
-        $('#question').text("Question: " + jsonData.status.question);
-        $('#answers').empty();
-        jsonData.status.answers.forEach(answer => $('#answers').append($('<li>').text(answer)));
-        $('#correct_idx').text("Correct answer index: " + jsonData.status.correct_idx);
-        $('#q_level_logic').text("Question logic level: " + jsonData.status.q_level_logic);
-        $('#q_level_mem').text("Question memory level: " + jsonData.status.q_level_mem);
-        $('#vid').text("Video: " + jsonData.status.vid);
-        $('#shots').text("Shots contained: " + jsonData.status.shot_contained);*/
+            // Create the renderer
+            var render = new dagreD3.render();
 
-        // Overwrite the previous graph to redraw completely (we can't remove edges easily unfortunately) 
-        g = new dagre.graphlib.Graph();
+            // Set up an SVG group so that we can translate the final graph.
+            var svg = d3.select("svg");
+            svgGroup = svg.append("g");
+            
+            // Set up socket
+            var socket = io();
 
-        // Set an object for the graph label
-        g.setGraph({});
+            socket.on('jsonUpdate', function (jsonData) {
+                console.log(JSON.stringify(jsonData));
+                // Overwrite the previous graph to redraw completely (we can't remove edges easily unfortunately) 
+                g = new dagre.graphlib.Graph();
 
-        // Default to assigning a new object as a label for each new edge.
-        g.setDefaultEdgeLabel(function () { return {}; });
+                // Clear the previous viewBox so that sizes will be drawn correctly
+                svg.attr("viewBox", null);
 
-        // Set left-to-right orientation
-        g.graph().rankDir = 'LR';
+                // Set an object for the graph label
+                g.setGraph({});
 
-        modules = jsonData;
-        modules.forEach(generateNode);
+                // Default to assigning a new object as a label for each new edge.
+                g.setDefaultEdgeLabel(function () { return {}; });
 
-        // Run the renderer. This is what draws the final graph.
-        render(d3.select("svg g"), g);
+                // Set left-to-right orientation
+                if (getWidth() > 1200) {
+                    g.graph().rankDir = 'LR';
+                };
 
-        g.nodes().forEach(function(v) {
-            console.log("Node " + v + ": " + JSON.stringify(g.node(v)));
+                modules = jsonData;
+                modules.forEach(generateNode);
+
+                // Write the question and video to page in separate cards
+                question = modules[0]["question"]
+                video = modules[0]["video"]
+                document.getElementById("question").innerHTML = `
+                    <div class="card">
+                        <h5 class="card-header">Question:</h5>
+                        <div class="card-body text-wrap">${question}</div>
+                    </div>`
+                document.getElementById("video").innerHTML = `
+                    <div class="card">
+                        <h5 class="card-header">Input video:</h5>
+                        <div class="card-body text-wrap">${video}</div>
+                    </div>`
+
+                g.nodes().forEach(function (v) {
+                    console.log("Node " + v + ": " + JSON.stringify(g.node(v)));
+                });
+                g.edges().forEach(function (e) {
+                    console.log("Edge " + e.v + " -> " + e.w + ": " + JSON.stringify(g.edge(e)));
+                });
+                
+                // Run the renderer. This is what draws the final graph.
+                render(d3.select("svg g"), g);
+
+                // Center the graph
+                //svg.attr("width", g.graph().width + 80);
+                //svg.attr("height", g.graph().height + 80);
+                //var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
+                //svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
+
+                svg.attr("preserveAspectRatio", "xMinYMin meet")
+                svg.attr("viewBox", "0 0 " + (g.graph().width + 80) + " " + (g.graph().height + 80));
+            });
+
+            function generateNode(module, index) {
+                var nodeLabel = `
+                    <div class="card text-white" style="width: 200px;">
+                        <h5 class="card-header text-wrap module-name">${module.name}</h5>
+                        <ul class="list-group list-group-flush text-dark text-wrap">
+                            <li class="list-group-item">Input: ${module.input}</li>
+                            <li class="list-group-item">Output: ${module.output}</li>
+                        </ul>
+                    </div>`
+                g.setNode(`${module.id}`, { labelType: 'html', label: nodeLabel, padding: 0, class: `${module.state} ${module.group}` })
+                module.next_module.forEach(next => g.setEdge(`${module.id}`, next.toString(), { curve: d3.curveBasis, class: `${module.state}` }))
+            }
+
+            function getWidth() {
+                return Math.max(
+                    document.body.scrollWidth,
+                    document.documentElement.scrollWidth,
+                    document.body.offsetWidth,
+                    document.documentElement.offsetWidth,
+                    document.documentElement.clientWidth
+                );
+            }
         });
-        g.edges().forEach(function(e) {
-            console.log("Edge " + e.v + " -> " + e.w + ": " + JSON.stringify(g.edge(e)));
-        });
-
-        // Center the graph
-        svg.attr("width", g.graph().width + 80);
-        svg.attr("height", g.graph().height + 80);
-        var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
-        svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
-      });
-
-      function generateNode(module, index) { 
-        var nodeLabel = `
-            <div class="card text-white" style="width: 200px;">
-              <h5 class="card-header text-wrap module-name">${module.name}</h5>
-              <ul class="list-group list-group-flush text-dark text-wrap">
-                <li class="list-group-item">Input: ${module.input}</li>
-                <li class="list-group-item">Output: ${module.output}</li>
-              </ul>
-            </div>`
-        g.setNode(`${module.id}`, { labelType: 'html', label: nodeLabel, padding: 0, class: `${module.state} ${module.group}` })
-        module.next_module.forEach(next => g.setEdge(`${module.id}`, next.toString(), { curve: d3.curveBasis, class: `${module.state}`}))
-      }
-
-
-    });
-  </script>
+    </script>
 </head>
 
 <body>
-  <div id="svg"></div>
+    <div class="container-fluid pt-4 px-4">
+        <div class="row">
+            <div class="col-md">
+                <div id="question"></div>
+            </div>
+            <div class="col-md">
+                <div id="video"></div>
+            </div>
+        </div>
+        <div id="svg" class="pt-3"></div>
+        <footer>© Björn Bebensee, 2020</footer>
+    </div>
 </body>
 
 </html>
