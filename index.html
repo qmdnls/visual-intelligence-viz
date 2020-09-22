@@ -138,7 +138,7 @@
                 if (modules[0]["video"] !== video) {
                     video = modules[0]["video"]
                     document.getElementById("video").innerHTML = `
-                            <video width="320" height="240" controls autoplay muted>
+                            <video width="320" height="240" autoplay playsinline muted loop>
                                 <source src="media/${video}" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>`
