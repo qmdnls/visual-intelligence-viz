@@ -39,7 +39,7 @@ And that's it, the server is now listening on port 3000!
 
 # Usage
 
-The server is listening to changes in the `demo.json` file. If there is any change to the file (e.g. the file is overwritten by a Python script outputting the new module states) the server will reload the file and send updates to all clients via web sockets. The data flow graph is then redrawn client-side and changes are reflected in real-time. The currently active module is highlighted.
+The server is listening to changes in the `demo.json` file. If there is any change to the file (e.g. the file is overwritten by a Python script outputting the new module states) the server will reload the file and send updates to all clients via web sockets. The data flow graph is then redrawn client-side and changes are reflected in real-time. The currently active module is highlighted. The graph adapts to the current window size in a responsive manner and can be displayed on mobile devices as well. For window sizes over 1200px the graph will be displayed from left to right and for everything underneath it will be displayed top to bottom (this most notably applies to most mobile devices in vertical mode).
 
 # Format of the .json file
 
@@ -81,3 +81,5 @@ Additionally for our use case, the first module, that is the one with `id = 0`, 
     },
 ]
 ```
+
+Both the question and the video are displayed above the graph to clearly show what is being given as input to the network.
