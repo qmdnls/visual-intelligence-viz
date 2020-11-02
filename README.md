@@ -43,7 +43,28 @@ The server is listening to changes in the `demo.json` file. If there is any chan
 
 # Format of the .json file
 
-The `demo.json` file represents the state of the modules at any given time. Essentially, the file is a list of all the modules that will be drawn in the graph and contains some basic information about each module:
+The `demo.json` file represents the state of the modules at any given time. Essentially, the file is a list of all the modules that will be drawn in the graph and contains some basic information about each module. For each module a number of fields such as its `id` need to be included. An example of this:
+
+```
+[
+    {
+        "id": 1,
+        "name": "음성 인식 모듈",
+        "next_module": [
+            4,5,9
+        ],
+        "input": "Audio file",
+        "output": "Has Haeyoung1 served for military duty?",
+        "state": "inactive",
+        "group": "dialog"
+    },
+    ...
+]
+```
+
+The `id` field is a unique ID for each module. The name will be shown as the name of the module in the data flow graph. The `next_module` attribute is a list of module IDs of modules that are children in the graph, i.e. we list the IDs of all the modules to which this module will output its data. The `input` and `output` attribute take a textual representation of the data and output it as part of the module in the data flow graph. The `state` attribute should either be set to `active` or to `inactive` and represents whether the module is currently running or not. The `group` attribute determines a "grouping" for each module; while not strictly necessary we use four groups (`env`, `dialog`, `qa` and `sigm`) and assign each of them a different style (color) to highlight which modules belong together.
+
+Additionally for our use case, the first module, that is the one with `id = 0`, is special in that it specifies some meta attributes of the environment. The `question` field specifies the input question  and the `video` field specifies the input video given to the network. So the module will look like this:
 
 ```
 [
@@ -58,8 +79,5 @@ The `demo.json` file represents the state of the modules at any given time. Esse
         "state": "inactive",
         "group": "env"
     },
-    ...
 ]
 ```
-
-The `id` field is a unique ID for each module. The name will be shown as the name of the module in the data flow graph. The `next_module` attribute is a list of module IDs of modules that are children in the graph, i.e. we list the IDs of all the modules to which this module will output its data. The `input` and `output` attribute take a textual representation of the data and output it as part of the module in the data flow graph. The `state` attribute should either be set to `active` or to `inactive` and represents whether the module is currently running or not. The `group` attribute determines a "grouping" for each module; while not strictly necessary we use four groups (`env`, `dialog`, `qa` and `sigm`) and assign each of them a different style (color) to highlight which modules belong together.
